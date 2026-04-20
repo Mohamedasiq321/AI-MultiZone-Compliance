@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Compliance Analytics{% endblock %}
+{% block content %}
+
+<style>
+/* Container styling */
+.table-container { margin-top: 30px; overflow-x:auto; }
+h2, h3 { color: #fff; margin-top: 30px; }
+
+/* Dark table styling */
+.table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    background:#1e1e2f;
+    border-radius:10px;
+    overflow:hidden;
+}
+.table th, .table td {
+    border:1px solid #333;
+    padding:10px;
+    color:#fff;
+    text-align:center;
+}
+.table th { background:#2f2f4f; }
+
+/* Badge styling */
+.badge {
+    padding:5px 10px;
+    border-radius:8px;
+    font-weight:bold;
+    color:#000;
+}
+.good { background:#4cd137; }
+.avg { background:#fbc531; }
+.low { background:#e84118; }
+
+/* Alerts styling */
+.alerts { list-style:none; padding:0; }
+.alerts li {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#2f2f4f;
+    margin-bottom:8px;
+    padding:10px;
+    border-radius:8px;
+}
+
+/* Chart container */
+#complianceChart {
+    background:#1e1e2f;
+    padding:20px;
+    border-radius:10px;
+    margin-top:20px;
+}
+</style>
+
+<h2>Employee Compliance Progress</h2>
+
+<canvas id="complianceChart"></canvas>
+
+<div class="table-container">
+<table class="table">
+<tr>
+<th>Employee</th><th>Helmet</th><th>Mask</th><th>Suit</th><th>ID Card</th>
+</tr>
+{% for s in summary %}
+<tr>
+<td>{{ s.employee.user.username }}</td>
+<td><span class="badge {{ s.helmet_cls }}">{{ s.helmet }}%</span></td>
+<td><span class="badge {{ s.mask_cls }}">{{ s.mask }}%</span></td>
+<td><span class="badge {{ s.suit_cls }}">{{ s.suit }}%</span></td>
+<td><span class="badge {{ s.id_card_cls }}">{{ s.id_card }}%</span></td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<h3>Active Alerts</h3>
+<ul class="alerts">
+{% for a in alerts %}
+<li>
+  <span>{{ a.title }}</span>
+  <span class="badge {{ a.cls }}">{{ a.level|title }}</span>
+</li>
+{% empty %}
+<li>No active alerts</li>
+{% endfor %}
+</ul>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('complianceChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for s in summary %}"{{ s.employee.user.username }}",{% endfor %}],
+        datasets: [
+            {
+                label: 'Helmet',
+                data: [{% for s in summary %}{{ s.helmet }},{% endfor %}],
+                backgroundColor: '#4cd137'
+            },
+            {
+                label: 'Mask',
+                data: [{% for s in summary %}{{ s.mask }},{% endfor %}],
+                backgroundColor: '#fbc531'
+            },
+            {
+                label: 'Suit',
+                data: [{% for s in summary %}{{ s.suit }},{% endfor %}],
+                backgroundColor: '#00a8ff'
+            },
+            {
+                label: 'ID Card',
+                data: [{% for s in summary %}{{ s.id_card }},{% endfor %}],
+                backgroundColor: '#e84118'
+            }
+        ]
+    },
+    options: {
+        responsive:true,
+        plugins:{
+            legend:{position:'top', labels:{color:'#fff'}},
+            title:{display:true, text:'Compliance Overview', color:'#fff', font:{size:18}}
+        },
+        scales:{
+            x:{ticks:{color:'#fff'}},
+            y:{ticks:{color:'#fff'}, beginAtZero:true, max:100}
+        }
+    }
+});
+</script>
+
+{% endblock %}

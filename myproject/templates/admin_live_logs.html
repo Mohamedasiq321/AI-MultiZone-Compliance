@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Live Violation Logs{% endblock %}
+
+{% block content %}
+
+<h2>Live Detection — Violation Logs</h2>
+
+{% if not records %}
+    <p>No violations recorded yet.</p>
+{% else %}
+
+<div style="display:flex; flex-wrap:wrap; gap:20px; padding:20px;">
+
+{% for r in records %}
+
+<div style="background:white; width:260px; padding:15px; border-radius:10px;
+            box-shadow:0 2px 10px rgba(0,0,0,0.2);">
+
+    {% if r.image %}
+    <img src="{{ r.image.url }}" style="width:100%; border-radius:8px; margin-bottom:10px;">
+    {% endif %}
+
+    <p><b>Name:</b> {{ r.recognized_name }}</p>
+    <p><b>Helmet:</b> {{ r.helmet_status }}</p>
+    <p><b>Mask:</b> {{ r.mask_status }}</p>
+    <p><b>Time:</b> {{ r.timestamp }}</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+{% endif %}
+
+{% endblock %}

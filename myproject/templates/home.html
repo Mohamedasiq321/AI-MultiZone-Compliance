@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+body.home-body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0f172a;
+    color: #e5e7eb;
+    margin: 0;
+    padding: 0;
+}
+.home-top {
+    display: flex;
+    justify-content: flex-end;
+    margin: 30px 50px 50px 50px;
+}
+.login-dropdown select {
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #e5e7eb;
+    border: 1px solid #38bdf8;
+    transition: all 0.2s;
+}
+.login-dropdown select:hover {
+    background: #0f172a;
+}
+.login-dropdown select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 8px rgba(56,189,248,0.6);
+}
+.home-hero {
+    text-align: center;
+    padding: 60px 20px 40px 20px;
+}
+.home-hero h1 {
+    font-size: 52px;
+    color: #38bdf8;
+    margin-bottom: 20px;
+}
+.home-hero p {
+    font-size: 20px;
+    color: #cbd5f5;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+.home-hero img {
+    max-width: 70%;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+.section {
+    padding: 60px 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+.section h2 {
+    font-size: 36px;
+    color: #38bdf8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.section p {
+    font-size: 18px;
+    color: #cbd5f5;
+    line-height: 1.8;
+    text-align: justify;
+    margin-bottom: 30px;
+}
+.section img {
+    max-width: 80%;
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #1e293b;
+    color: #94a3b8;
+}
+</style>
+
+<div class="home-top">
+    <div class="login-dropdown">
+        <select onchange="location = this.value">
+            <option selected disabled>Login as...</option>
+            <option value="{% url 'login' %}?as=admin">Admin</option>
+            <option value="{% url 'login' %}?as=regional_manager">Regional Manager</option>
+            <option value="{% url 'login' %}?as=employee">Employee</option>
+        </select>
+    </div>
+</div>
+
+<div class="home-hero">
+    <h1>Welcome to Solvify</h1>
+    <p>Solvify is your professional compliance and management platform, designed to streamline employee monitoring, safety checks, and analytics in real-time. Manage your organization efficiently with advanced AI-driven solutions.</p>
+    <img src="https://via.placeholder.com/900x400.png?text=Solvify+Banner" alt="Solvify Banner">
+</div>
+
+<div class="section" id="about-us">
+    <h2>About Us</h2>
+    <p>Solvify is an innovative platform dedicated to enhancing workplace safety and operational efficiency. Our mission is to provide a seamless experience for admins, managers, and employees through automation, real-time reporting, and AI-driven insights. We help organizations maintain compliance standards effortlessly.</p>
+    <img src="https://via.placeholder.com/800x350.png?text=About+Us+Image" alt="About Us">
+</div>
+
+<div class="section" id="solutions">
+    <h2>Solutions We Provide</h2>
+    <p>Our platform offers a wide range of solutions including real-time safety gear detection, attendance tracking, employee compliance monitoring, alert management, and advanced reporting. Solvify enables managers to respond quickly to compliance breaches and maintain a secure work environment.</p>
+    <img src="https://via.placeholder.com/800x350.png?text=Solutions+Image" alt="Solutions">
+</div>
+
+<div class="section" id="technology">
+    <h2>Technologies Used</h2>
+    <p>We leverage cutting-edge technologies including YOLO for object detection, AI & ML models for compliance analytics, Django for backend management, and modern front-end frameworks for a sleek user interface. Our system ensures scalability, security, and fast performance across all devices.</p>
+    <img src="https://via.placeholder.com/800x350.png?text=Technology+Image" alt="Technology">
+</div>
+
+<div class="section" id="contact">
+    <h2>Contact Us</h2>
+    <p>Reach out to us to schedule a demo or get in touch for support. Solvify is committed to providing exceptional service and helping your organization achieve safety and compliance excellence.</p>
+    <img src="https://via.placeholder.com/800x350.png?text=Contact+Image" alt="Contact">
+</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Image</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; }
+        .container { width: 50%; margin: auto; padding: 20px; background: white; border-radius: 12px; margin-top: 50px; }
+        input[type=file], select { width: 100%; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 6px;}
+        .result { margin-top: 20px; padding: 10px; background: #f4f4f4; border-radius: 6px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Upload Image for Task</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Select Task:</label>
+        <select name="task">
+            {% for task in tasks %}
+                <option value="{{ task.name }}" {% if selected_task == task.name %}selected{% endif %}>
+                    {{ task.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Select Image:</label>
+        <input type="file" name="image" required>
+
+        <button type="submit">Upload & Detect</button>
+    </form>
+
+    {% if result %}
+        <div class="result">
+            <strong>Task:</strong> {{ result.task }} <br>
+            <strong>Status:</strong> {{ result.status }}
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

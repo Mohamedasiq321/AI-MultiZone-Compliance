@@ -1,0 +1,148 @@
+/* ---- GLOBAL ---- */
+body {
+  background: #f5f6fa;
+  color: #2f3640;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- TOP BAR ---- */
+.topbar {
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid #dcdde1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+}
+
+.brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #273c75;
+}
+
+.topnav a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #353b48;
+  font-weight: 500;
+}
+
+.topnav a:hover {
+  color: #40739e;
+}
+
+/* ---- PAGE CONTAINER ---- */
+.container {
+  max-width: 1080px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+/* ---- CARD ---- */
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e1e2e6;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #2f3640;
+}
+
+.cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card.small {
+  width: calc(33% - 20px);
+}
+
+/* ---- BUTTONS ---- */
+.btn {
+  background: #273c75;
+  color: #ffffff !important;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: #192a56;
+}
+
+.btn.secondary {
+  background: #718093;
+}
+
+.btn.secondary:hover {
+  background: #576574;
+}
+
+.btn.danger {
+  background: #e84118;
+}
+
+.btn.danger:hover {
+  background: #c23616;
+}
+
+/* ---- TABLE ---- */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.table th {
+  background: #f1f2f6;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #dcdde1;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+/* ---- FORMS ---- */
+input, select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dcdde1;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  background: white;
+  color: #2f3640;
+}
+
+input:focus {
+  border-color: #273c75;
+  outline: none;
+}
+
+/* ---- ERROR ---- */
+.error {
+  background: #ffdddd;
+  color: #c23616;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border: 1px solid #ffb8b8;
+}

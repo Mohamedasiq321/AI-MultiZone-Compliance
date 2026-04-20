@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <title>{% block title %}Solvify | Compliance Management{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: #0b0f1a; color: #e5e7eb; display: flex; }
+        a { text-decoration: none; color: inherit; }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0f172a, #020617);
+            min-height: 100vh;
+            padding: 24px 16px;
+            position: fixed;
+        }
+        .logo { font-size: 22px; font-weight: 700; color: #38bdf8; margin-bottom: 40px; }
+        .menu a {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border-radius: 10px;
+            color: #cbd5f5; margin-bottom: 8px;
+            transition: background 0.2s;
+        }
+        .menu a:hover { background: rgba(56,189,248,0.15); color: #38bdf8; }
+
+        .main { margin-left: 260px; width: calc(100% - 260px); display: flex; flex-direction: column; min-height: 100vh; }
+
+        .topbar {
+            height: 70px; background: #020617;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; border-bottom: 1px solid #1e293b;
+        }
+        .page-title { font-size: 18px; font-weight: 600; }
+        .top-actions { display: flex; align-items: center; gap: 16px; }
+        .user-chip { display: flex; align-items: center; gap: 8px; background: #020617; padding: 6px 12px; border-radius: 20px; }
+
+        .btn { padding: 8px 16px; border-radius: 8px; font-size: 14px; }
+        .btn.logout { background: #ef4444; color: #fff; }
+        .btn.primary { background: #38bdf8; color: #020617; }
+
+        .content { flex: 1; padding: 24px; }
+        .footer { padding: 16px; text-align: center; font-size: 13px; color: #94a3b8; border-top: 1px solid #1e293b; }
+
+        @media (max-width: 900px) {
+            .sidebar { width: 80px; }
+            .menu span { display: none; }
+            .main { margin-left: 80px; width: calc(100% - 80px); }
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="logo">Solvify</div>
+    <nav class="menu">
+        <a href="{% url 'home' %}"><i class='bx bx-home'></i><span>Home</span></a>
+        {% if user.is_authenticated %}
+            {% if user.profile.role == 'admin' %}
+                <a href="{% url 'admin_panel' %}"><i class='bx bx-grid-alt'></i><span>Admin Panel</span></a>
+                <a href="{% url 'admin_dashboard' %}"><i class='bx bx-bar-chart'></i><span>Analytics</span></a>
+            {% elif user.profile.role == 'regional_manager' %}
+                <a href="{% url 'rm_dashboard' %}"><i class='bx bx-group'></i><span>Team</span></a>
+                <a href="{% url 'rm_compliance_dashboard' %}"><i class='bx bx-shield'></i><span>Compliance</span></a>
+            {% elif user.profile.role == 'employee' %}
+                <a href="{% url 'employee_dashboard' %}"><i class='bx bx-user'></i><span>Dashboard</span></a>
+                <a href="{% url 'employee_compliance_dashboard' %}"><i class='bx bx-check-shield'></i><span>My Compliance</span></a>
+            {% endif %}
+        {% endif %}
+    </nav>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <div class="page-title">{% block page_title %}Dashboard{% endblock %}</div>
+        <div class="top-actions">
+            {% if user.is_authenticated %}
+                <div class="user-chip"><i class='bx bx-user-circle'></i>{{ user.username }}</div>
+                <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn primary">Login</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">© {{ now.year }} Solvify · Compliance Platform</footer>
+</div>
+
+<script>
+    document.querySelectorAll('.menu a').forEach(link => {
+        if (link.href === window.location.href) link.style.background = 'rgba(56,189,248,0.25)';
+    });
+</script>
+</body>
+</html>

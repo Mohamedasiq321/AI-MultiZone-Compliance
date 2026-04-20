@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Regional Manager Dashboard{% endblock %}
+{% block content %}
+
+<style>
+body {
+    background: #1e1e2f;
+    color: #f5f6fa;
+    font-family: 'Inter', sans-serif;
+}
+h2,h3{color:#f5f6fa}
+.kpi{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-top:30px;
+}
+.card{
+    background:#2c2c3e;
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+    text-align:center;
+    transition: transform 0.2s;
+}
+.card:hover{transform: translateY(-5px);}
+.card h3{color:#bbb}
+.card p{font-size:28px;font-weight:700;color:#00f2fe}
+.section{margin-top:50px}
+.progress{background:#444;border-radius:20px;overflow:hidden;height:15px;margin-bottom:15px;}
+.progress div{height:15px;background:linear-gradient(90deg,#4facfe,#00f2fe);}
+.flex{display:flex;gap:30px;flex-wrap:wrap}
+.box{flex:1;min-width:350px;background:#2c2c3e;padding:25px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+.timeline li{margin:15px 0;list-style:none;position:relative;padding-left:25px;}
+.timeline li::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:6px;
+    width:12px;
+    height:12px;
+    background:#00f2fe;
+    border-radius:50%;
+}
+footer{margin-top:60px;text-align:center;color:#888;font-size:0.85rem;}
+</style>
+
+<h2>Welcome, {{ rm.user.username }}</h2>
+<p>Regional Manager Dashboard Overview</p>
+
+<!-- KPI -->
+<div class="kpi">
+  <div class="card"><h3>Employees</h3><p>{{ kpi.employees }}</p></div>
+  <div class="card"><h3>Active Projects</h3><p>{{ kpi.projects }}</p></div>
+  <div class="card"><h3>Avg Compliance</h3><p>{{ kpi.avg_compliance }}%</p></div>
+  <div class="card"><h3>Alerts</h3><p>{{ kpi.alerts }}</p></div>
+</div>
+
+<!-- Projects -->
+<div class="section box">
+  <h3>Ongoing Projects</h3>
+  {% for p in projects %}
+    <p>{{ p.name }} - {{ p.progress }}%</p>
+    <div class="progress"><div style="width:{{ p.progress }}%"></div></div>
+  {% endfor %}
+</div>
+
+<!-- Charts -->
+<div class="section flex">
+  <div class="box">
+    <h3>Profit vs Loss</h3>
+    <canvas id="profitChart"></canvas>
+  </div>
+  <div class="box">
+    <h3>Employee Progress</h3>
+    <canvas id="empChart"></canvas>
+  </div>
+</div>
+
+<div class="section flex">
+  <div class="box">
+    <h3>Compliance Distribution</h3>
+    <canvas id="complianceChart"></canvas>
+  </div>
+  <div class="box">
+    <h3>Employee Skill Radar</h3>
+    <canvas id="radarChart"></canvas>
+  </div>
+</div>
+
+<div class="section box">
+  <h3>Scheduled Plans</h3>
+  <canvas id="scheduleChart"></canvas>
+</div>
+
+<footer>Solvify © 2025 | Regional Manager Panel</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const profitData = {{ profit_loss }};
+const empData = {{ employee_progress }};
+const complianceData = [80, 60, 90, 70]; // Dummy helmet, mask, suit, id_card
+const radarData = [80,70,60,90,75]; // dummy employee skills
+const scheduleData = [3,5,2,4]; // dummy planned tasks
+
+new Chart(document.getElementById('profitChart'), {
+    type: 'line',
+    data: {
+        labels:['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets:[{label:'Profit', data:profitData, borderColor:'#00f2fe', backgroundColor:'rgba(0,242,254,0.2)', tension:0.4, fill:true}]
+    }
+});
+
+new Chart(document.getElementById('empChart'), {
+    type: 'bar',
+    data: {
+        labels:['Emp1','Emp2','Emp3','Emp4','Emp5'],
+        datasets:[{label:'Progress %', data:empData, backgroundColor:'#4facfe'}]
+    },
+    options:{indexAxis:'y'}
+});
+
+new Chart(document.getElementById('complianceChart'), {
+    type:'pie',
+    data:{
+        labels:['Helmet','Mask','Suit','ID Card'],
+        datasets:[{data:complianceData, backgroundColor:['#4facfe','#00f2fe','#192a56','#273c75']}]
+    }
+});
+
+new Chart(document.getElementById('radarChart'), {
+    type:'radar',
+    data:{
+        labels:['Safety','Efficiency','Teamwork','Compliance','Skill'],
+        datasets:[{label:'Employee Skill', data:radarData, backgroundColor:'rgba(0,242,254,0.2)', borderColor:'#00f2fe', borderWidth:2}]
+    },
+    options:{scale:{angleLines:{color:'#555'},grid:{color:'#444'},pointLabels:{color:'#f5f6fa'}}}
+});
+
+new Chart(document.getElementById('scheduleChart'), {
+    type:'bar',
+    data:{
+        labels:['Task1','Task2','Task3','Task4'],
+        datasets:[{label:'Planned', data:scheduleData, backgroundColor:'#00f2fe'}]
+    },
+    options:{indexAxis:'y'}
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}My Compliance{% endblock %}
+{% block content %}
+<h2>{{ employee.user.username }} - Compliance Dashboard</h2>
+
+<div class="progress mb-2">
+  <div class="progress-bar bg-success" role="progressbar" style="width: {{ helmet_percent }}%">
+    Helmet: {{ helmet_percent }}%
+  </div>
+</div>
+<div class="progress mb-2">
+  <div class="progress-bar bg-info" role="progressbar" style="width: {{ mask_percent }}%">
+    Mask: {{ mask_percent }}%
+  </div>
+</div>
+<div class="progress mb-2">
+  <div class="progress-bar bg-warning" role="progressbar" style="width: {{ suit_percent }}%">
+    Suit: {{ suit_percent }}%
+  </div>
+</div>
+<div class="progress mb-2">
+  <div class="progress-bar bg-primary" role="progressbar" style="width: {{ id_percent }}%">
+    ID Card: {{ id_percent }}%
+  </div>
+</div>
+
+<h3>History</h3>
+<table class="table">
+  <tr>
+    <th>Date</th><th>Helmet</th><th>Mask</th><th>Suit</th><th>ID Card</th>
+  </tr>
+  {% for h in history %}
+  <tr>
+    <td>{{ h.date }}</td>
+    <td>{% if h.helmet %}✅{% else %}❌{% endif %}</td>
+    <td>{% if h.mask %}✅{% else %}❌{% endif %}</td>
+    <td>{% if h.suit %}✅{% else %}❌{% endif %}</td>
+    <td>{% if h.id_card %}✅{% else %}❌{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

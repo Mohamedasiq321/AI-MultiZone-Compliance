@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Compliance</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; }
+        .container { width: 70%; margin: auto; padding: 20px; background: white; border-radius: 12px; margin-top: 30px; }
+        .card { display: inline-block; width: 150px; padding: 20px; margin: 10px;
+            background: #e0f7fa; border-radius: 12px; text-align: center; font-weight: bold; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background: #00796b; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>My Compliance Summary</h2>
+    <div>
+        <div class="card">Helmet: {{ compliance.Helmet }}%</div>
+        <div class="card">Mask: {{ compliance.Mask }}%</div>
+        <div class="card">Suit: {{ compliance.Suit }}%</div>
+        <div class="card">ID Card: {{ compliance.ID Card }}%</div>
+    </div>
+
+    <h3>Compliance History</h3>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Helmet</th>
+            <th>Mask</th>
+            <th>Suit</th>
+            <th>ID Card</th>
+        </tr>
+        {% for entry in history %}
+        <tr>
+            <td>{{ entry.created_at }}</td>
+            <td>{{ entry.helmet }}</td>
+            <td>{{ entry.mask }}</td>
+            <td>{{ entry.suit }}</td>
+            <td>{{ entry.id_card }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+</body>
+</html>

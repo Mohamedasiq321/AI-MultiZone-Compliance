@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Record Compliance{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Record Compliance</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="helmet" value="1" id="helmet">
+      <label class="form-check-label" for="helmet">Helmet Detection 😷</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="mask" value="1" id="mask">
+      <label class="form-check-label" for="mask">Mask Detection 😷</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="suit" value="1" id="suit">
+      <label class="form-check-label" for="suit">ID Card Verification 🪪</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="id_card" value="1" id="id_card">
+      <label class="form-check-label" for="id_card">Person Recognition 👤</label>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>
+</div>
+{% endblock %}

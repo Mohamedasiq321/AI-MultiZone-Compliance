@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Safety Dashboard{% endblock %}
+
+{% block content %}
+<h2>Safety Dashboard</h2>
+
+<!-- Button to go to Face Recognition -->
+<a href="{% url 'face_recognition_dashboard' %}" class="btn btn-primary" style="margin-bottom:20px;">
+    Go to Face Recognition
+</a>
+
+<!-- Live Safety Gear Detection -->
+<div style="margin-bottom:30px;">
+    <h3>Live Safety Gear Detection (2-Second Auto Capture)</h3>
+    <video id="video" width="400" autoplay style="border:1px solid black;"></video>
+    <br><br>
+
+    <form method="post" enctype="multipart/form-data" id="capture-form">
+        {% csrf_token %}
+        <input type="hidden" name="captured_image" id="captured_image">
+        <button type="button" onclick="startDetection()">Start 2-Second Detection</button>
+    </form>
+
+    <canvas id="canvas" width="400" height="300" style="display:none;"></canvas>
+
+    {% if report %}
+    <h3>Safety Gear Report:</h3>
+    <table class="table">
+        <tr><th>Gear</th><th>Status</th></tr>
+        {% for gear, status in report.items %}
+        <tr>
+            <td>{{ gear }}</td>
+            <td>
+                {% if status %}
+                    ✅ Worn
+                {% else %}
+                    ❌ Missing
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+<script>
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let context = canvas.getContext('2d');
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(err => {
+    alert("Camera access denied!");
+});
+
+function startDetection() {
+    alert("Detecting for 2 seconds...");
+
+    setTimeout(() => {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(function(blob) {
+            let file = new File([blob], "capture.jpg", { type: "image/jpeg" });
+
+            let dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+
+            let input = document.createElement("input");
+            input.type = "file";
+            input.name = "captured_image";
+            input.files = dataTransfer.files;
+            input.style.display = "none";
+
+            document.getElementById("capture-form").appendChild(input);
+            document.getElementById("capture-form").submit();
+        }, 'image/jpeg');
+
+    }, 2000); // 2 seconds
+}
+</script>
+
+{% endblock %}

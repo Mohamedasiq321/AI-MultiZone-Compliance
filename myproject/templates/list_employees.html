@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}List Employees{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+    <h2 class="mb-4" style="color: #e2e8f0; font-weight: 600;">Employees</h2>
+
+    <div class="card p-3" style="background-color: #1f2937; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
+        <table class="table table-hover text-white mb-0">
+            <thead style="border-bottom: 2px solid #3b82f6;">
+                <tr>
+                    <th>Username</th>
+                    <th>Employee ID</th>
+                    <th>Regional Manager</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr style="transition: background 0.3s;">
+                    <td>{{ emp.user.username }}</td>
+                    <td>{{ emp.employee_id }}</td>
+                    <td>{% if emp.regional_manager %}{{ emp.regional_manager.user.username }}{% else %}N/A{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center text-gray-400">No employees found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<style>
+.table-hover tbody tr:hover {
+    background-color: #334155 !important;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Safety AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+</head>
+
+<body>
+
+<h2>Face Recognition + Helmet Mask Detection</h2>
+
+<div id="webcam-container"></div>
+<div id="label-container"></div>
+
+<h3 id="status">Starting camera...</h3>
+<script>
+
+const URL = "https://teachablemachine.withgoogle.com/models/isBdaVrBU/"
+
+let model
+let webcam
+let labelContainer
+let maxPredictions
+
+let authorizedName=null
+let detectionDone=false
+
+async function init(){
+
+const modelURL = URL+"model.json"
+const metadataURL = URL+"metadata.json"
+
+model = await tmImage.load(modelURL,metadataURL)
+maxPredictions = model.getTotalClasses()
+
+webcam = new tmImage.Webcam(400,400,true)
+
+await webcam.setup()
+await webcam.play()
+
+document.getElementById("webcam-container").appendChild(webcam.canvas)
+
+labelContainer = document.getElementById("label-container")
+
+for(let i=0;i<maxPredictions;i++){
+labelContainer.appendChild(document.createElement("div"))
+}
+
+document.getElementById("status").innerText="Detecting Face..."
+
+window.requestAnimationFrame(loop)
+
+}
+
+async function loop(){
+
+webcam.update()
+await predict()
+
+window.requestAnimationFrame(loop)
+
+}
+
+async function predict(){
+
+if(detectionDone) return
+
+const prediction = await model.predict(webcam.canvas)
+
+let bestClass=""
+let bestProb=0
+
+for(let i=0;i<maxPredictions;i++){
+
+let p = prediction[i]
+
+labelContainer.childNodes[i].innerHTML =
+p.className+" : "+(p.probability*100).toFixed(2)+"%"
+
+if(p.probability>bestProb){
+bestProb=p.probability
+bestClass=p.className
+}
+
+}
+
+if(bestProb>=0.8 && authorizedName==null){
+
+authorizedName=bestClass
+
+document.getElementById("status").innerText =
+"Authorized : "+authorizedName
+
+setTimeout(startPPECheck,2000)
+
+}
+
+else if(authorizedName==null){
+
+document.getElementById("status").innerText =
+"Unauthorized Access"
+
+}
+
+}
+
+function startPPECheck(){
+
+if(detectionDone) return
+
+detectionDone=true
+
+document.getElementById("status").innerText =
+"Checking Helmet and Mask..."
+
+captureFrame()
+
+}
+
+function captureFrame(){
+
+let canvas=document.createElement("canvas")
+
+canvas.width=webcam.canvas.width
+canvas.height=webcam.canvas.height
+
+let ctx=canvas.getContext("2d")
+
+ctx.drawImage(webcam.canvas,0,0)
+
+let image = canvas.toDataURL("image/jpeg")
+
+sendFrame(image)
+
+}
+
+function sendFrame(image){
+
+fetch("/live-detection/",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/x-www-form-urlencoded",
+"X-CSRFToken":getCookie("csrftoken")
+},
+
+body:new URLSearchParams({
+
+image:image,
+name:authorizedName
+
+})
+
+})
+
+.then(res=>res.json())
+.then(data=>{
+
+document.getElementById("status").innerText = data.result
+
+// RESET SYSTEM FOR NEXT PERSON
+setTimeout(()=>{
+
+authorizedName=null
+detectionDone=false
+
+document.getElementById("status").innerText="Detecting Face..."
+
+},3000)
+
+})
+
+}
+
+function getCookie(name){
+
+let cookieValue=null
+
+if(document.cookie && document.cookie!==''){
+
+const cookies=document.cookie.split(';')
+
+for(let i=0;i<cookies.length;i++){
+
+const cookie=cookies[i].trim()
+
+if(cookie.substring(0,name.length+1)===(name+'=')){
+
+cookieValue=decodeURIComponent(cookie.substring(name.length+1))
+
+break
+
+}
+
+}
+
+}
+
+return cookieValue
+
+}
+
+init()
+
+</script>
+
+</body>
+</html>
